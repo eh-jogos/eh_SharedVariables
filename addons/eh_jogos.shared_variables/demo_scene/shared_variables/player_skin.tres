@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/eh_jogos.shared_variables/demo_scene/elements/PlayerSkinVariable.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+__meta__ = {
+"value": 0
+}
+is_session_only = false
+value = 0
