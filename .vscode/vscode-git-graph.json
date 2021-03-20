@@ -1,0 +1,7 @@
+{
+    "onRepoLoadShowCheckedOutBranch": false,
+    "onRepoLoadShowSpecificBranches": [
+        "docs-src"
+    ],
+    "exportedAt": 1616250910981
+}
