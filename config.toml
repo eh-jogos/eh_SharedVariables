@@ -1,0 +1,35 @@
+baseURL = "https://eh-jogos.github.io/eh_SharedVariables"
+languageCode = "en-us"
+title = "eh_jogos Shared Variables for Godot projects"
+canonifyURLs = true
+
+# Change the default theme to be use when building the site with Hugo
+theme = "hugo-theme-learn"
+
+# hugo-theme-learn prameters
+[params]
+	description = "Documentation for eh_SharedVariables Godot Plugin"
+	images = ["shared_variables_itchio.png"]
+	themeVariant = "blue"
+
+# For search functionality
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-github'></i>&nbsp;GitHub Repository"
+identifier = "github"
+url = "https://github.com/eh-jogos/eh_SharedVariables"
+weight = 1
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-coffee'></i>&nbsp;Send a tip on Ko-fi"
+identifier = "ko-fi.com/eh_jogos"
+url = "https://ko-fi.com/eh_jogos"
+weight = 2
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-gratipay'></i>&nbsp;Take a look at my Patreon"
+identifier = "patreon.com/eh_jogos"
+url = "https://www.patreon.com/eh_jogos"
+weight = 3
