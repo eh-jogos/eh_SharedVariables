@@ -1,0 +1,22 @@
+[
+{
+	"uri": "https://eh-jogos.github.io/eh_SharedVariables/",
+	"title": "eh_SharedVariables",
+	"tags": [],
+	"description": "",
+	"content": "Godot Plugin to add SharedVariables to your project.\nShared Variables are my attempt to do something similiar to the system Ryan Hipple describes in his Unite 2017 talk, of using ScriptableObjects as a game architecture, and in Godot\u0026rsquo;s case, using Custom Resources. Godot\u0026rsquo;s Resources are a pretty good fit for it and even simplify the process a bit, though making it work in the editor smoothly is a bit more convoluted.\nIn the future there will be a documentation site here.\n"
+},
+{
+	"uri": "https://eh-jogos.github.io/eh_SharedVariables/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "https://eh-jogos.github.io/eh_SharedVariables/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]

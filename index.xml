@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>eh_jogos Shared Variables for Godot projects</title>
+    <title>eh_SharedVariables on eh_jogos Shared Variables for Godot projects</title>
     <link>https://eh-jogos.github.io/eh_SharedVariables/</link>
-    <description>Recent content on eh_jogos Shared Variables for Godot projects</description>
+    <description>Recent content in eh_SharedVariables on eh_jogos Shared Variables for Godot projects</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://eh-jogos.github.io/eh_SharedVariables/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Sat, 20 Mar 2021 22:52:10 -0300</lastBuildDate><atom:link href="https://eh-jogos.github.io/eh_SharedVariables/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
