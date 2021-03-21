@@ -10,7 +10,7 @@ theme = "hugo-theme-learn"
 [params]
 	description = "Documentation for eh_SharedVariables Godot Plugin"
 	images = ["shared_variables_itchio.png"]
-	themeVariant = "blue"
+	themeVariant = "eh-shared-variables"
 
 # For search functionality
 [outputs]
