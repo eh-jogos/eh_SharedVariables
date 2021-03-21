@@ -1,7 +1,8 @@
 {
     "onRepoLoadShowCheckedOutBranch": false,
     "onRepoLoadShowSpecificBranches": [
+        "gh-pages",
         "docs-src"
     ],
-    "exportedAt": 1616250910981
+    "exportedAt": 1616290513916
 }
