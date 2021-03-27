@@ -1,3 +1,4 @@
+tool
 # NodePath that can be saved in disk like a custom resource.
 # Used as [Shared Variables] so that the data it holds can be accessed and modified from multiple 
 # parts of the code. Based on the idea of Unity's Scriptable Objects and Ryan Hipple's Unite Talk.
@@ -26,6 +27,10 @@ var default_value: NodePath = NodePath("") setget _set_default_value, _get_defau
 
 
 ### Built in Engine Methods -----------------------------------------------------------------------
+
+func _init() -> void:
+	is_session_only = true
+
 
 func _get_property_list() -> Array:
 	var properties: = []
