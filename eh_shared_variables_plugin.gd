@@ -5,8 +5,8 @@
 tool
 extends EditorPlugin
 
-#const TEST_PLUGIN = preload("res://addons/eh_jogos.shared_variables/test_plugin.gd")
-
+#const TEST_PLUGIN = preload("res://addons/eh_jogos.shared_variables/inspector_plugin/test_plugin.gd")
+#
 #var plugin
 
 func _enter_tree():
