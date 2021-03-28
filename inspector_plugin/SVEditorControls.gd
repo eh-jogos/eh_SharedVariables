@@ -28,7 +28,6 @@ var _inspector_helper: SharedInspector
 
 func _ready() -> void:
 	update_properties_to_expose()
-	_inspector_helper = SharedInspector.new(get_parent(), _properties_to_expose)
 	
 	for property in _properties_to_expose:
 		_set("_%s"%[property], get_parent().get_meta(property))
@@ -82,10 +81,12 @@ func _get_configuration_warning() -> String:
 ### Public Methods --------------------------------------------------------------------------------
 
 func update_properties_to_expose() -> void:
+	_properties_to_expose = []
 	var script: GDScript = get_parent().get_script()
 	var export_comment_begin = script.source_code.find(EXPORT_TOKEN)
 	while export_comment_begin != -1:
 		var export_comment_end = script.source_code.find("\n", export_comment_begin) 
+		
 		if export_comment_end == -1:
 			push_error(
 					"ABORTING | Couldn't find a new line after export comment."
@@ -105,7 +106,11 @@ func update_properties_to_expose() -> void:
 				break
 			
 			_properties_to_expose.append(property_name)
+		
 		export_comment_begin = script.source_code.find(EXPORT_TOKEN, export_comment_end)
+	
+	_inspector_helper = SharedInspector.new(get_parent(), _properties_to_expose)
+	property_list_changed_notify()
 
 ### -----------------------------------------------------------------------------------------------
 
