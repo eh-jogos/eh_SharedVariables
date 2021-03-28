@@ -10,13 +10,16 @@ extends Node
 
 #--- constants ------------------------------------------------------------------------------------
 
+const EXPORT_TOKEN = "#sv-export"
+
 #--- public variables - order: export > normal var > onready --------------------------------------
 
-export var properties_to_expose: PoolStringArray = [] setget _set_properties_to_expose
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
-onready var _inspector_helper: = SharedInspector.new(get_parent(), properties_to_expose)
+var _properties_to_expose: PoolStringArray = []
+
+var _inspector_helper: SharedInspector
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -24,7 +27,10 @@ onready var _inspector_helper: = SharedInspector.new(get_parent(), properties_to
 ### Built in Engine Methods -----------------------------------------------------------------------
 
 func _ready() -> void:
-	for property in properties_to_expose:
+	update_properties_to_expose()
+	_inspector_helper = SharedInspector.new(get_parent(), _properties_to_expose)
+	
+	for property in _properties_to_expose:
 		_set("_%s"%[property], get_parent().get_meta(property))
 	
 	if not Engine.editor_hint:
@@ -75,15 +81,59 @@ func _get_configuration_warning() -> String:
 
 ### Public Methods --------------------------------------------------------------------------------
 
+func update_properties_to_expose() -> void:
+	var script: GDScript = get_parent().get_script()
+	var export_comment_begin = script.source_code.find(EXPORT_TOKEN)
+	while export_comment_begin != -1:
+		var export_comment_end = script.source_code.find("\n", export_comment_begin) 
+		if export_comment_end == -1:
+			push_error(
+					"ABORTING | Couldn't find a new line after export comment."
+					+ "%s must be placed directly above a variable definition"%[EXPORT_TOKEN]
+			)
+			break
+		else:
+			var next_line_break = script.source_code.find("\n", export_comment_end + "\n".length())
+			var property_line: = script.source_code.substr(
+					export_comment_end, next_line_break - export_comment_end
+			)
+			property_line = property_line.strip_edges()
+			
+			var property_name: = _get_property_name(property_line)
+			if property_name == "":
+				push_error("ABORTING | Unable to get a property name from %s"%[property_line])
+				break
+			
+			_properties_to_expose.append(property_name)
+		export_comment_begin = script.source_code.find(EXPORT_TOKEN, export_comment_end)
+
 ### -----------------------------------------------------------------------------------------------
 
 
 ### Private Methods -------------------------------------------------------------------------------
 
-func _set_properties_to_expose(value: PoolStringArray) -> void:
-	properties_to_expose = value
-	if get_parent() != null:
-		_inspector_helper = SharedInspector.new(get_parent(), properties_to_expose)
-		property_list_changed_notify()
+func _get_property_name(property_line: String) -> String:
+	var property_name: = ""
+	
+	var property_name_begin: = property_line.find("var")
+	if property_name_begin == -1:
+		push_error("Invalid line, %s must be placed directly above a variable definition"
+				%[EXPORT_TOKEN]
+		)
+		return property_name
+	
+	property_name_begin += "var".length()
+	
+	var property_name_end: = property_line.find(":", property_name_begin) 
+	if property_name_end == -1:
+		property_name_end = property_line.find("=", property_name_begin)
+	if property_name_end == -1:
+		property_name_end = property_line.length()
+	
+	property_name = property_line.substr(
+			property_name_begin, property_name_end - property_name_begin
+	).strip_edges()
+	
+	return property_name
 
 ### -----------------------------------------------------------------------------------------------
