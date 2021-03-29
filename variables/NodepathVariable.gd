@@ -1,8 +1,8 @@
-tool
 # NodePath that can be saved in disk like a custom resource.
 # Used as [Shared Variables] so that the data it holds can be accessed and modified from multiple 
 # parts of the code. Based on the idea of Unity's Scriptable Objects and Ryan Hipple's Unite Talk.
 # @category: Shared Variables
+tool
 class_name NodePathVariable
 extends SharedVariable
 

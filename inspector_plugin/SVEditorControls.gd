@@ -30,7 +30,7 @@ func _ready() -> void:
 	update_properties_to_expose()
 	
 	for property in _properties_to_expose:
-		_set("_%s"%[property], get_parent().get_meta(property))
+		_set("_%s"%[property], get_meta(property))
 	
 	if not Engine.editor_hint:
 		queue_free()
@@ -109,7 +109,7 @@ func update_properties_to_expose() -> void:
 		
 		export_comment_begin = script.source_code.find(EXPORT_TOKEN, export_comment_end)
 	
-	_inspector_helper = SharedInspector.new(get_parent(), _properties_to_expose)
+	_inspector_helper = SharedInspector.new(self, get_parent(), _properties_to_expose)
 	property_list_changed_notify()
 
 ### -----------------------------------------------------------------------------------------------
