@@ -12,7 +12,8 @@ extends Reference
 #--- public variables - order: export > normal var > onready --------------------------------------
 
 var shared_properties: = {}
-var parent_node: Node
+var node_origin: Node
+var node_inspector_control: Node
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
@@ -21,8 +22,9 @@ var parent_node: Node
 
 ### Built in Engine Methods -----------------------------------------------------------------------
 
-func _init(node: Node, properties: Array) -> void:
-	parent_node = node
+func _init(p_inspector: Node, p_origin: Node, properties: Array) -> void:
+	node_inspector_control = p_inspector
+	node_origin = p_origin
 	for property in properties:
 		var key: String = "_%s"%[property]
 		shared_properties[key] = property
@@ -31,10 +33,10 @@ func _init(node: Node, properties: Array) -> void:
 func _set(property: String, value) -> bool:
 	var has_handled: = false
 	if shared_properties.has(property):
-		parent_node.set(shared_properties[property], value)
-		parent_node.set_meta(
+		node_origin.set(shared_properties[property], value)
+		node_inspector_control.set_meta(
 				shared_properties[property], 
-				parent_node.get(shared_properties[property])
+				value
 		)
 		has_handled = true
 	
@@ -44,10 +46,10 @@ func _set(property: String, value) -> bool:
 func _get(property: String):
 	var to_return = null
 	if shared_properties.has(property):
-		if parent_node.has_meta(shared_properties[property]):
-			to_return = parent_node.get_meta(shared_properties[property])
+		if node_inspector_control.has_meta(shared_properties[property]):
+			to_return = node_inspector_control.get_meta(shared_properties[property])
 		else:
-			to_return = parent_node.get(shared_properties[property])
+			to_return = node_origin.get(shared_properties[property])
 	
 	return to_return
 
