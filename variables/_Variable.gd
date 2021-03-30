@@ -39,22 +39,25 @@ static func get_property_category() -> Dictionary:
 	return dict
 
 
-static func get_property_dict(property_name: String) -> Dictionary:
+static func get_property_dict(property_name: String, hint_string: String) -> Dictionary:
 	var dict = {
 		name = "%s"%[property_name],
 		type = TYPE_OBJECT,
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE,
 		hint = PROPERTY_HINT_RESOURCE_TYPE,
-		hint_string = "Resource"
+		hint_string = "%s"%[hint_string]
 	}
 	return dict
 
 
-static func get_properties_for(names: PoolStringArray) ->  Array:
+static func get_properties_for(names: PoolStringArray, hint_strings: Dictionary) ->  Array:
 	var properties: = []
 	properties.append(get_property_category())
 	for name in names:
-		properties.append(get_property_dict(name))
+		var hint_string = "SharedVariable"
+		if hint_strings.has(name) and hint_strings[name] != "Resource":
+			hint_string = hint_strings[name]
+		properties.append(get_property_dict(name, hint_string))
 	return properties
 
 
