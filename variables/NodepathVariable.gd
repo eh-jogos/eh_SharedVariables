@@ -2,7 +2,6 @@
 # Used as [Shared Variables] so that the data it holds can be accessed and modified from multiple 
 # parts of the code. Based on the idea of Unity's Scriptable Objects and Ryan Hipple's Unite Talk.
 # @category: Shared Variables
-tool
 class_name NodePathVariable
 extends SharedVariable
 
@@ -51,16 +50,6 @@ func get_class() -> String:
 
 
 ### Private Methods -------------------------------------------------------------------------------
-
-func _get_value_property_dict(property_name: String) -> Dictionary:
-	var dict = {
-		name = "%s"%[property_name],
-		type = TYPE_NODE_PATH, 
-		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE,
-		hint = PROPERTY_HINT_NONE,
-	}
-	return dict
-
 
 func _set_value(p_value: NodePath) -> void:
 	if is_first_run_in_session:
