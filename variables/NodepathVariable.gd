@@ -18,9 +18,6 @@ extends SharedVariable
 # Shared Variable value
 var value: NodePath = NodePath("") setget _set_value, _get_value
 
-# Defautl value in case you're using `is_session_only`
-var default_value: NodePath = NodePath("") setget _set_default_value, _get_default_value
-
 #--- private variables - order: export > normal var > onready -------------------------------------
 
 ### -----------------------------------------------------------------------------------------------
@@ -34,16 +31,6 @@ func _init() -> void:
 
 func _get_property_list() -> Array:
 	var properties: = []
-	
-	if is_session_only:
-		if not has_meta("default_value"):
-			set_meta("default_value", _get_value())
-		properties.append(_get_value_property_dict("default_value"))
-	else:
-		if has_meta("default_value"):
-			set_meta("value", _get_default_value())
-			set_meta("default_value", null)
-		properties.append(_get_value_property_dict("value"))
 	
 	return properties
 
@@ -76,44 +63,28 @@ func _get_value_property_dict(property_name: String) -> Dictionary:
 
 
 func _set_value(p_value: NodePath) -> void:
-	if _should_reset_value():
-		p_value = get_meta("default_value")
-	set_meta("value", p_value)
+	if is_first_run_in_session:
+		is_first_run_in_session = false
+	
 	value = p_value
 	emit_signal("value_updated")
 	_auto_save()
 
 
 func _get_value() -> NodePath:
-	var meta_value = NodePath("")
+	var default_value = NodePath("")
 	if _should_reset_value():
-		meta_value = get_meta("default_value")
-		_set_value(meta_value)
-	elif value == NodePath("") and has_meta("value"):
-		meta_value = get_meta("value")
-	else:
-		meta_value = value
+		_set_value(default_value)
 	
-	if meta_value == NodePath("") and resource_name != "":
-		push_error("Undefined nodepath in %s"%[resource_name])
-		assert(false)
-	
-	return meta_value
+	return value
 
 
-func _set_default_value(p_value: NodePath) -> void:
-	set_meta("default_value", p_value)
-	_set_value(p_value)
-	default_value = p_value
-	_auto_save(true)
-
-
-func _get_default_value() -> NodePath:
-	var meta_value = NodePath("")
-	if default_value == NodePath("") and has_meta("default_value"):
-		meta_value = get_meta("default_value")
-	else:
-		meta_value = default_value
-	return meta_value
+func _set_is_session_only(value: bool) -> void:
+	if not value:
+		value = true
+		var msg: = "NodePathVariable's are always session only. To understand how to use it and "
+		msg += "see code examples see the Documentation or use the custom Node eh_NodePathListener"
+		push_warning(msg)
+	._set_is_session_only(value)
 
 ### -----------------------------------------------------------------------------------------------
