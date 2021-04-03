@@ -54,8 +54,8 @@ static func get_properties_for(names: PoolStringArray, hint_strings: Dictionary)
 	var properties: = []
 	properties.append(get_property_category())
 	for name in names:
-		var hint_string = "Resource"
-		if hint_strings.has(name) and hint_strings[name] != "":
+		var hint_string = "SharedVariable"
+		if hint_strings.has(name) and hint_strings[name] != "Resource":
 			hint_string = hint_strings[name]
 		properties.append(get_property_dict(name, hint_string))
 	return properties
