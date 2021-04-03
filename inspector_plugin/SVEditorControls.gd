@@ -17,7 +17,7 @@ const EXPORT_TOKEN = "#sv-export"
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
-var _properties_to_expose: Array = []
+var _properties_to_expose: PoolStringArray = []
 
 var _inspector_helper: SharedInspector
 
@@ -29,8 +29,8 @@ var _inspector_helper: SharedInspector
 func _ready() -> void:
 	update_properties_to_expose()
 	
-	for dict in _properties_to_expose:
-		_set("_%s"%[dict.property], get_meta(dict.property))
+	for property in _properties_to_expose:
+		_set("_%s"%[property], get_meta(property))
 	
 	if not Engine.editor_hint:
 		queue_free()
@@ -83,9 +83,9 @@ func _get_configuration_warning() -> String:
 func update_properties_to_expose() -> void:
 	_properties_to_expose = []
 	var script: GDScript = get_parent().get_script()
-	var export_comment_begin: = script.source_code.find(EXPORT_TOKEN)
+	var export_comment_begin = script.source_code.find(EXPORT_TOKEN)
 	while export_comment_begin != -1:
-		var export_comment_end: = script.source_code.find("\n", export_comment_begin) 
+		var export_comment_end = script.source_code.find("\n", export_comment_begin) 
 		
 		if export_comment_end == -1:
 			push_error(
@@ -94,14 +94,6 @@ func update_properties_to_expose() -> void:
 			)
 			break
 		else:
-			var export_type_begin: = export_comment_begin + EXPORT_TOKEN.length()
-			var export_type: = script.source_code.substr(
-					export_type_begin, export_comment_end - export_type_begin
-			).strip_edges()
-			
-			if export_type == "":
-				export_type = "Resource"
-			
 			var next_line_break = script.source_code.find("\n", export_comment_end + "\n".length())
 			var property_line: = script.source_code.substr(
 					export_comment_end, next_line_break - export_comment_end
@@ -113,7 +105,7 @@ func update_properties_to_expose() -> void:
 				push_error("ABORTING | Unable to get a property name from %s"%[property_line])
 				break
 			
-			_properties_to_expose.append({property = property_name, hint_string = export_type})
+			_properties_to_expose.append(property_name)
 		
 		export_comment_begin = script.source_code.find(EXPORT_TOKEN, export_comment_end)
 	

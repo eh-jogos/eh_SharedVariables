@@ -12,7 +12,6 @@ extends Reference
 #--- public variables - order: export > normal var > onready --------------------------------------
 
 var shared_properties: = {}
-var shared_hint_strings: = {}
 var node_origin: Node
 var node_inspector_control: Node
 
@@ -26,10 +25,9 @@ var node_inspector_control: Node
 func _init(p_inspector: Node, p_origin: Node, properties: Array) -> void:
 	node_inspector_control = p_inspector
 	node_origin = p_origin
-	for dict in properties:
-		var key: String = "_%s"%[dict.property]
-		shared_properties[key] = dict.property
-		shared_hint_strings[key] = dict.hint_string
+	for property in properties:
+		var key: String = "_%s"%[property]
+		shared_properties[key] = property
 
 
 func _set(property: String, value) -> bool:
@@ -57,10 +55,7 @@ func _get(property: String):
 
 
 func _get_property_list() -> Array:
-	var properties: = SharedVariable.get_properties_for(
-			shared_properties.keys(), 
-			shared_hint_strings
-	)
+	var properties: = SharedVariable.get_properties_for(shared_properties.keys())
 	return properties
 
 ### -----------------------------------------------------------------------------------------------
