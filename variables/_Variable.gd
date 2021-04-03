@@ -17,7 +17,7 @@ signal value_updated
 
 #--- constants ------------------------------------------------------------------------------------
 
-const resetable: eh_Resetable = \
+const RESETABLE: eh_Resetable = \
 		preload("res://addons/eh_jogos.shared_variables/shared_variables_reset.tres")
 
 #--- public variables - order: export > normal var > onready --------------------------------------
@@ -129,8 +129,8 @@ func _treat_resource_path() -> String:
 
 
 func _should_reset_value() -> bool:
-	if not resetable.has_object(self) and is_session_only:
-		resetable.add_reset_function(self, "reset")
+	if is_session_only and not RESETABLE.has_object(self):
+		RESETABLE.add_reset_function(self, "reset")
 	
 	var should_reset = is_first_run_in_session and is_session_only
 	is_first_run_in_session = false
