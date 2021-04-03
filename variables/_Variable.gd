@@ -17,6 +17,9 @@ signal value_updated
 
 #--- constants ------------------------------------------------------------------------------------
 
+const RESETABLE: eh_Resetable = \
+		preload("res://addons/eh_jogos.shared_variables/shared_variables_reset.tres")
+
 #--- public variables - order: export > normal var > onready --------------------------------------
 
 export var is_session_only: bool = false setget _set_is_session_only
@@ -70,6 +73,11 @@ func get_class() -> String:
 
 ### Public Methods --------------------------------------------------------------------------------
 
+func reset() -> void:
+	if is_session_only:
+		set("value", get("default_value"))
+
+
 func connect_to(object: Object, func_name: String) -> void:
 	if not is_connected("value_updated", object, func_name):
 		connect("value_updated", object, func_name)
@@ -105,6 +113,8 @@ func _auto_save(force_save = not is_session_only) -> void:
 		var instance_to_save = self
 		if treated_path != resource_path:
 			instance_to_save = load(treated_path)
+		instance_to_save.resource_name = treated_path.get_file()
+		
 		var error = ResourceSaver.save(treated_path, instance_to_save)
 		if error != OK:
 			push_error("ERROR %s | %s"%[error, treated_path])
@@ -119,6 +129,9 @@ func _treat_resource_path() -> String:
 
 
 func _should_reset_value() -> bool:
+	if is_session_only and not RESETABLE.has_object(self):
+		RESETABLE.add_reset_function(self, "reset")
+	
 	var should_reset = is_first_run_in_session and is_session_only
 	is_first_run_in_session = false
 	return should_reset
