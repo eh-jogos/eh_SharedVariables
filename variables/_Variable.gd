@@ -33,34 +33,6 @@ var is_first_run_in_session: bool = true
 
 ### Built in Engine Methods -----------------------------------------------------------------------
 
-static func get_property_category() -> Dictionary:
-	var dict = {
-		name = "Shared Variables",
-		type = TYPE_NIL,
-		usage = PROPERTY_USAGE_CATEGORY,
-	}
-	return dict
-
-
-static func get_property_dict(property_name: String) -> Dictionary:
-	var dict = {
-		name = "%s"%[property_name],
-		type = TYPE_OBJECT,
-		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE,
-		hint = PROPERTY_HINT_RESOURCE_TYPE,
-		hint_string = "Resource"
-	}
-	return dict
-
-
-static func get_properties_for(names: PoolStringArray) ->  Array:
-	var properties: = []
-	properties.append(get_property_category())
-	for name in names:
-		properties.append(get_property_dict(name))
-	return properties
-
-
 func is_class(p_class: String) -> bool:
 	return p_class == "SharedVariable" or .is_class(p_class)
 

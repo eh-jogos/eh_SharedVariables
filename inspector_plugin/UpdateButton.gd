@@ -11,7 +11,7 @@ extends Button
 
 #--- public variables - order: export > normal var > onready --------------------------------------
 
-var sv_controls: SVEditorControls
+var custom_controls: eh_CustomEditorControls
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
@@ -25,8 +25,8 @@ func _ready() -> void:
 
 
 func _pressed() -> void:
-	if sv_controls:
-		sv_controls.update_properties_to_expose()
+	if custom_controls:
+		custom_controls.update_properties_to_expose()
 
 ### -----------------------------------------------------------------------------------------------
 
