@@ -91,7 +91,6 @@ func _get_configuration_warning() -> String:
 ### Public Methods --------------------------------------------------------------------------------
 
 func update_properties_to_expose() -> void:
-	print("Updating")
 	_set_default_token_and_category()
 	_properties_to_expose.clear()
 	
