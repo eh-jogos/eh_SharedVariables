@@ -1,5 +1,5 @@
 # Write your doc string for this file here
-class_name SharedInspector
+class_name eh_CustomInspector
 extends Reference
 
 ### Member Variables and Dependencies -------------------------------------------------------------
@@ -17,14 +17,17 @@ var node_inspector_control: Node
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
+var _category_name: String = ""
+
 ### -----------------------------------------------------------------------------------------------
 
 
 ### Built in Engine Methods -----------------------------------------------------------------------
 
-func _init(p_inspector: Node, p_origin: Node, properties: Array) -> void:
+func _init(p_inspector: Node, p_origin: Node, properties: Array, category: String) -> void:
 	node_inspector_control = p_inspector
 	node_origin = p_origin
+	_category_name = category
 	for property in properties:
 		var key: String = "_%s"%[property]
 		shared_properties[key] = property
@@ -32,6 +35,7 @@ func _init(p_inspector: Node, p_origin: Node, properties: Array) -> void:
 
 func _set(property: String, value) -> bool:
 	var has_handled: = false
+	
 	if shared_properties.has(property):
 		node_origin.set(shared_properties[property], value)
 		node_inspector_control.set_meta(
@@ -55,7 +59,7 @@ func _get(property: String):
 
 
 func _get_property_list() -> Array:
-	var properties: = SharedVariable.get_properties_for(shared_properties.keys())
+	var properties: = _get_properties_for(shared_properties.keys())
 	return properties
 
 ### -----------------------------------------------------------------------------------------------
@@ -63,9 +67,40 @@ func _get_property_list() -> Array:
 
 ### Public Methods --------------------------------------------------------------------------------
 
+func has_property(p_property: String) -> bool:
+	return shared_properties.has(p_property)
+
 ### -----------------------------------------------------------------------------------------------
 
 
 ### Private Methods -------------------------------------------------------------------------------
+
+func _get_property_category() -> Dictionary:
+	var dict = {
+		name = _category_name,
+		type = TYPE_NIL,
+		usage = PROPERTY_USAGE_CATEGORY,
+	}
+	return dict
+
+
+func _get_property_dict(property_name: String) -> Dictionary:
+	var dict = {
+		name = "%s"%[property_name],
+		type = TYPE_OBJECT,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE,
+		hint = PROPERTY_HINT_RESOURCE_TYPE,
+		hint_string = "Resource"
+	}
+	return dict
+
+
+func _get_properties_for(names: PoolStringArray) ->  Array:
+	var properties: = []
+	properties.append(_get_property_category())
+	for name in names:
+		properties.append(_get_property_dict(name))
+	return properties
+
 
 ### -----------------------------------------------------------------------------------------------
