@@ -25,14 +25,14 @@ func _init() -> void:
 
 
 func can_handle(object: Object) -> bool:
-	var is_sv_editor_controls = object is SVEditorControls
+	var is_sv_editor_controls = object is eh_CustomEditorControls
 	return is_sv_editor_controls
 
 
 func parse_begin(object: Object) -> void:
 	var update_button = sv_update_button.instance()
 	add_custom_control(update_button)
-	update_button.sv_controls = object
+	update_button.custom_controls = object
 
 ### -----------------------------------------------------------------------------------------------
 
