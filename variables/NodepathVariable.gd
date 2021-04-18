@@ -17,7 +17,11 @@ extends SharedVariable
 # Shared Variable value
 var value: NodePath = NodePath("") setget _set_value, _get_value
 
+var default_value = NodePath("")
+
 #--- private variables - order: export > normal var > onready -------------------------------------
+
+var _followers: = {}
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -49,6 +53,12 @@ func get_class() -> String:
 func is_empty() -> bool:
 	return value == NodePath("")
 
+
+func add_follower(object: Node, variable_name: String) -> void:
+	_followers[object] = variable_name
+	if not is_empty():
+		object.set(variable_name, object.get_node(value))
+
 ### -----------------------------------------------------------------------------------------------
 
 
@@ -60,11 +70,14 @@ func _set_value(p_value: NodePath) -> void:
 	
 	value = p_value
 	emit_signal("value_updated")
+	
+	if not is_empty():
+		_update_all_followers()
+	
 	_auto_save()
 
 
 func _get_value() -> NodePath:
-	var default_value = NodePath("")
 	if _should_reset_value():
 		_set_value(default_value)
 	
@@ -78,5 +91,13 @@ func _set_is_session_only(value: bool) -> void:
 		msg += "see code examples see the Documentation or use the custom Node eh_NodePathListener"
 		push_warning(msg)
 	._set_is_session_only(value)
+
+
+func _update_all_followers() -> void:
+	for object in _followers:
+		if is_instance_valid(object):
+			object.set(_followers[object], object.get_node(value))
+		else:
+			_followers.erase(object)
 
 ### -----------------------------------------------------------------------------------------------
