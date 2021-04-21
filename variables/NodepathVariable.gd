@@ -2,6 +2,7 @@
 # Used as [Shared Variables] so that the data it holds can be accessed and modified from multiple 
 # parts of the code. Based on the idea of Unity's Scriptable Objects and Ryan Hipple's Unite Talk.
 # @category: Shared Variables
+tool
 class_name NodePathVariable
 extends SharedVariable
 
@@ -55,6 +56,9 @@ func is_empty() -> bool:
 
 
 func add_follower(object: Node, variable_name: String) -> void:
+	if eh_EditorHelpers.is_editor():
+		return
+	
 	_followers[object] = variable_name
 	if not is_empty():
 		object.set(variable_name, object.get_node(value))
@@ -94,6 +98,9 @@ func _set_is_session_only(value: bool) -> void:
 
 
 func _update_all_followers() -> void:
+	if eh_EditorHelpers.is_editor():
+		return
+	
 	for object in _followers:
 		if is_instance_valid(object):
 			object.set(_followers[object], object.get_node(value))
