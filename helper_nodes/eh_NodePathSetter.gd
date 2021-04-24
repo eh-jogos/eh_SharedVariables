@@ -18,7 +18,6 @@ var _nodepath_variable: NodePathVariable = null
 
 var _custom_editor: = eh_CustomInspector.new(
 		self, 
-		self, 
 		["_nodepath_variable"],
 		""
 )
