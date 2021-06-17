@@ -14,7 +14,7 @@ extends Node
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
-var _nodepath_variable: NodePathVariable = null
+var _nodepath_variable: NodePathVariable = null setget _set_nodepath_variable
 
 var _custom_editor: = eh_CustomInspector.new(
 		self, 
@@ -80,5 +80,9 @@ func _get_configuration_warning() -> String:
 
 
 ### Private Methods -------------------------------------------------------------------------------
+
+func _set_nodepath_variable(value: NodePathVariable) -> void:
+	_nodepath_variable = value
+	update_configuration_warning()
 
 ### -----------------------------------------------------------------------------------------------
