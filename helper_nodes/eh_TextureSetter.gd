@@ -36,10 +36,6 @@ func _ready() -> void:
 	_viewport = get_parent() as Viewport
 	update_configuration_warning()
 	
-	if eh_EditorHelpers.is_editor():
-		eh_EditorHelpers.disable_all_processing(self)
-		return
-	
 	if _texture_variable != null and _viewport != null:
 		_texture_variable.value = _viewport.get_texture()
 		set_process(true)
@@ -48,7 +44,10 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	_texture_variable.value = _viewport.get_texture()
+	var image_texture = ImageTexture.new()
+	var image: Image = _viewport.get_texture().get_data()
+	image_texture.create_from_image(image, Texture.FLAG_FILTER)
+	_texture_variable.value = image_texture
 
 
 func _exit_tree() -> void:

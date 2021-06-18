@@ -16,7 +16,7 @@ extends SharedVariable
 #--- public variables - order: export > normal var > onready --------------------------------------
 
 # Shared Variable value
-var value: Texture = null setget _set_value, _get_value
+export var value: Texture = null setget _set_value, _get_value
 
 # Defautl value in case you're using `is_session_only`
 var default_value: Texture = null
@@ -59,18 +59,12 @@ func is_empty() -> bool:
 
 
 func add_follower(object: Object, variable_name: String) -> void:
-	if eh_EditorHelpers.is_editor():
-		return
-	
 	_followers[object] = variable_name
 	if not is_empty():
 		object.set(variable_name, value)
 
 
 func remove_follower(object: Object) -> void:
-	if eh_EditorHelpers.is_editor():
-		return
-	
 	if _followers.has(object):
 		_followers.erase(object)
 
@@ -89,9 +83,6 @@ func _set_value(p_value: Texture) -> void:
 	
 	if has_changed:
 		_update_all_followers()
-	
-	_auto_save()
-
 
 func _get_value() -> Texture:
 	if _should_reset_value():
@@ -112,9 +103,6 @@ func _set_is_session_only(value: bool) -> void:
 
 
 func _update_all_followers() -> void:
-	if eh_EditorHelpers.is_editor():
-		return
-	
 	for object in _followers:
 		if is_instance_valid(object):
 			object.set(_followers[object], value)
