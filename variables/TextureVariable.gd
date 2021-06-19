@@ -16,7 +16,7 @@ extends SharedVariable
 #--- public variables - order: export > normal var > onready --------------------------------------
 
 # Shared Variable value
-export var value: Texture = null setget _set_value, _get_value
+var value: Texture = null setget _set_value, _get_value
 
 # Defautl value in case you're using `is_session_only`
 var default_value: Texture = null
@@ -39,7 +39,20 @@ func _init() -> void:
 func _get_property_list() -> Array:
 	var properties: = []
 	
+	properties.append({
+		name = "preview",
+		type = TYPE_OBJECT, 
+		usage = PROPERTY_USAGE_EDITOR,
+		hint = PROPERTY_HINT_RESOURCE_TYPE,
+		hint_string = "Texture"
+	})
+	
 	return properties
+
+
+func _get(property: String):
+	if property == "preview":
+		return value
 
 
 func is_class(p_class: String) -> bool:
