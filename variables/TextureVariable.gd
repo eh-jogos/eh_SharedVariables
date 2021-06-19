@@ -1,9 +1,9 @@
-# NodePath that can be saved in disk like a custom resource.
+# Texture that can be saved in disk like a custom resource. 
 # Used as [Shared Variables] so that the data it holds can be accessed and modified from multiple 
 # parts of the code. Based on the idea of Unity's Scriptable Objects and Ryan Hipple's Unite Talk.
 # @category: Shared Variables
 tool
-class_name NodePathVariable
+class_name TextureVariable
 extends SharedVariable
 
 ### Member Variables and Dependencies -------------------------------------------------------------
@@ -16,14 +16,16 @@ extends SharedVariable
 #--- public variables - order: export > normal var > onready --------------------------------------
 
 # Shared Variable value
-var value: NodePath = NodePath("") setget _set_value, _get_value
+var value: Texture = null setget _set_value, _get_value
 
 # Defautl value in case you're using `is_session_only`
-var default_value = NodePath("")
+var default_value: Texture = null
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
-var _followers: = {}
+# Dictionary of followers that should be updated whenever value changes.
+# Its format is: {Object: String (name of variable that should be updated in Object), ...}
+var _followers: Dictionary = {}
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -37,15 +39,28 @@ func _init() -> void:
 func _get_property_list() -> Array:
 	var properties: = []
 	
+	properties.append({
+		name = "preview",
+		type = TYPE_OBJECT, 
+		usage = PROPERTY_USAGE_EDITOR,
+		hint = PROPERTY_HINT_RESOURCE_TYPE,
+		hint_string = "Texture"
+	})
+	
 	return properties
 
 
+func _get(property: String):
+	if property == "preview":
+		return value
+
+
 func is_class(p_class: String) -> bool:
-	return p_class == "NodePathVariable" or .is_class(p_class)
+	return p_class == "TextureVariable" or .is_class(p_class)
 
 
 func get_class() -> String:
-	return "NodePathVariable"
+	return "TextureVariable"
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -53,22 +68,16 @@ func get_class() -> String:
 ### Public Methods --------------------------------------------------------------------------------
 
 func is_empty() -> bool:
-	return value == NodePath("")
+	return value == null
 
 
-func add_follower(object: Node, variable_name: String) -> void:
-	if eh_EditorHelpers.is_editor():
-		return
-	
+func add_follower(object: Object, variable_name: String) -> void:
 	_followers[object] = variable_name
 	if not is_empty():
-		object.set(variable_name, object.get_node(value))
+		object.set(variable_name, value)
 
 
 func remove_follower(object: Object) -> void:
-	if eh_EditorHelpers.is_editor():
-		return
-	
 	if _followers.has(object):
 		_followers.erase(object)
 
@@ -77,7 +86,7 @@ func remove_follower(object: Object) -> void:
 
 ### Private Methods -------------------------------------------------------------------------------
 
-func _set_value(p_value: NodePath) -> void:
+func _set_value(p_value: Texture) -> void:
 	if is_first_run_in_session:
 		is_first_run_in_session = false
 	
@@ -87,11 +96,8 @@ func _set_value(p_value: NodePath) -> void:
 	
 	if has_changed:
 		_update_all_followers()
-	
-	_auto_save()
 
-
-func _get_value() -> NodePath:
+func _get_value() -> Texture:
 	if _should_reset_value():
 		_set_value(default_value)
 	
@@ -101,19 +107,18 @@ func _get_value() -> NodePath:
 func _set_is_session_only(value: bool) -> void:
 	if not value:
 		value = true
-		var msg: = "NodePathVariable's are always session only. To understand how to use it and "
-		msg += "see code examples see the Documentation or use the custom Node eh_NodePathSetter"
+		var msg: = "TextureVariable's are always session only. They are meant to be used as a way "
+		msg += "of fowarding a 'ViewportTexture' to distant Nodes or nodes in other scenes."
+		msg += "To understand how to use it and see code examples see the Documentation or use "
+		msg += "the custom Node eh_TextureSetter"
 		push_warning(msg)
 	._set_is_session_only(value)
 
 
 func _update_all_followers() -> void:
-	if eh_EditorHelpers.is_editor():
-		return
-	
 	for object in _followers:
 		if is_instance_valid(object):
-			object.set(_followers[object], object.get_node_or_null(value))
+			object.set(_followers[object], value)
 		else:
 			_followers.erase(object)
 
