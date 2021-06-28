@@ -61,9 +61,17 @@ func append(item) -> void:
 	_auto_save()
 
 
-func has(p_string: String) -> bool:
-	var has_found: = value.has(p_string)
+func has(p_value) -> bool:
+	var has_found: = value.has(p_value)
 	return has_found
+
+
+func empty() -> bool:
+	return value.empty()
+
+
+func erase(p_value) -> void:
+	value.erase(p_value)
 
 ### -----------------------------------------------------------------------------------------------
 
