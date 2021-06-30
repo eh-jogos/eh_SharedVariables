@@ -15,6 +15,8 @@ extends SharedVariable
 
 #--- public variables - order: export > normal var > onready --------------------------------------
 
+export var show_preview: = false setget _set_show_preview
+
 # Shared Variable value
 var value: Texture = null setget _set_value, _get_value
 
@@ -39,13 +41,14 @@ func _init() -> void:
 func _get_property_list() -> Array:
 	var properties: = []
 	
-	properties.append({
-		name = "preview",
-		type = TYPE_OBJECT, 
-		usage = PROPERTY_USAGE_EDITOR,
-		hint = PROPERTY_HINT_RESOURCE_TYPE,
-		hint_string = "Texture"
-	})
+	if show_preview:
+		properties.append({
+			name = "preview",
+			type = TYPE_OBJECT, 
+			usage = PROPERTY_USAGE_EDITOR,
+			hint = PROPERTY_HINT_RESOURCE_TYPE,
+			hint_string = "Texture"
+		})
 	
 	return properties
 
@@ -87,6 +90,9 @@ func remove_follower(object: Object) -> void:
 ### Private Methods -------------------------------------------------------------------------------
 
 func _set_value(p_value: Texture) -> void:
+	if eh_EditorHelpers.is_editor() and not show_preview:
+		return
+	
 	if is_first_run_in_session:
 		is_first_run_in_session = false
 	
@@ -121,5 +127,10 @@ func _update_all_followers() -> void:
 			object.set(_followers[object], value)
 		else:
 			_followers.erase(object)
+
+
+func _set_show_preview(value: bool) -> void:
+	show_preview = value
+	property_list_changed_notify()
 
 ### -----------------------------------------------------------------------------------------------

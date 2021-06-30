@@ -44,6 +44,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if eh_EditorHelpers.is_editor() and not _texture_variable.show_preview:
+		return
+	
 	var image_texture = ImageTexture.new()
 	var image: Image = _viewport.get_texture().get_data()
 	image_texture.create_from_image(image, Texture.FLAG_FILTER)
