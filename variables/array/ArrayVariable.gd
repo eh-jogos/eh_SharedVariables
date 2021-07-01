@@ -72,6 +72,14 @@ func empty() -> bool:
 
 func erase(p_value) -> void:
 	value.erase(p_value)
+	emit_signal("value_updated")
+	_auto_save()
+
+
+func clear() -> void:
+	value.clear()
+	emit_signal("value_updated")
+	_auto_save()
 
 ### -----------------------------------------------------------------------------------------------
 
