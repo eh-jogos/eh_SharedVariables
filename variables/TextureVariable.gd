@@ -9,6 +9,8 @@ extends SharedVariable
 ### Member Variables and Dependencies -------------------------------------------------------------
 #--- signals --------------------------------------------------------------------------------------
 
+signal preview_requested
+
 #--- enums ----------------------------------------------------------------------------------------
 
 #--- constants ------------------------------------------------------------------------------------
@@ -103,6 +105,7 @@ func _set_value(p_value: Texture) -> void:
 	if has_changed:
 		_update_all_followers()
 
+
 func _get_value() -> Texture:
 	if _should_reset_value():
 		_set_value(default_value)
@@ -129,8 +132,18 @@ func _update_all_followers() -> void:
 			_followers.erase(object)
 
 
-func _set_show_preview(value: bool) -> void:
-	show_preview = value
+func _set_show_preview(p_value: bool) -> void:
+	show_preview = p_value
+	
+	if show_preview:
+		emit_signal("preview_requested")
+		if value == null:
+			var msg = "Open the scene that holds the eh_TextureSetter which is responsible for "
+			msg += "this TextureVariable, so it can update it's preview based on it's viewport."
+			push_warning(msg)
+	else:
+		value = null
+	
 	property_list_changed_notify()
 
 ### -----------------------------------------------------------------------------------------------
