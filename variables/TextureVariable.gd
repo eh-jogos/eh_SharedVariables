@@ -73,10 +73,13 @@ func get_class() -> String:
 ### Public Methods --------------------------------------------------------------------------------
 
 func is_empty() -> bool:
-	return value == null
+	return not is_instance_valid(value)
 
 
 func add_follower(object: Object, variable_name: String) -> void:
+	if not is_instance_valid(object):
+		return
+	
 	_followers[object] = variable_name
 	if not is_empty():
 		object.set(variable_name, value)
