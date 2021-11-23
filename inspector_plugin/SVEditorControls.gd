@@ -32,6 +32,9 @@ extends eh_CustomEditorControls
 
 func _set_default_token_and_category() -> void:
 	._set_default_token_and_category()
-	settings["#sv-export"] = "Shared Variables"
+	settings["#sv-export"] = {
+		category = "Shared Variables",
+		properties = []
+	}
 
 ### -----------------------------------------------------------------------------------------------
