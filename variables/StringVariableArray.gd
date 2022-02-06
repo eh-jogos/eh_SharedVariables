@@ -58,7 +58,7 @@ func get_class() -> String:
 
 func append(element) -> void:
 	var string_variable: StringVariable = null
-	if element == null or not (element is String or element is StringVariable):
+	if not is_instance_valid(element) or not (element is String or element is StringVariable):
 		push_error("StringVariableArray only accepts StringVariables as elements")
 		return
 	

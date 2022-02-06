@@ -32,7 +32,6 @@ func _enter_tree() -> void:
 		eh_EditorHelpers.disable_all_processing(self)
 		return
 	
-	_custom_editor.set_source_properties()
 	if _nodepath_variable != null:
 		_nodepath_variable.value = get_parent().get_path()
 
